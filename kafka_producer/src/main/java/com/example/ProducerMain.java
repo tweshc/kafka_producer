@@ -15,7 +15,7 @@ public class ProducerMain {
 		KafkaProducer producer = (KafkaProducer) ctx.getBean(KafkaProducer.class);
 		
 		producer.sendMessage();
-		
+		//
 	}
 
 }
