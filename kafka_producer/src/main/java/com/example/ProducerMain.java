@@ -2,20 +2,24 @@ package com.example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import com.example.producer.KafkaProducer;
 
 @SpringBootApplication
+@EnableEurekaClient
 public class ProducerMain {
 
 	public static void main(String[] args) throws Exception {
-		ConfigurableApplicationContext ctx = SpringApplication.run(ProducerMain.class, args);
+		SpringApplication.run(ProducerMain.class, args);
 		
-		KafkaProducer producer = (KafkaProducer) ctx.getBean(KafkaProducer.class);
+		//ConfigurableApplicationContext ctx = SpringApplication.run(ProducerMain.class, args);
+
+		//KafkaProducer producer = (KafkaProducer) ctx.getBean(KafkaProducer.class);
 		
-		producer.sendMessage();
-		//
+		//producer.sendMessageFromFile();
+		
 	}
 
 }

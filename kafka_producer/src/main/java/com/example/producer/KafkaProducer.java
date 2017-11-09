@@ -13,9 +13,11 @@ import com.example.utility.FileReader;
 public class KafkaProducer {
 
 	@Autowired
-	FileReader fileReader;
+	private FileReader fileReader;
 	
-	public void sendMessage() throws Exception{
+	private Producer<String, String> producer;
+	
+	private Properties setDefaultProperties() {
 		 Properties props = new Properties();
 		 props.put("bootstrap.servers", "localhost:9092,localhost:9093");
 		 props.put("acks", "all");
@@ -25,9 +27,38 @@ public class KafkaProducer {
 		 props.put("buffer.memory", 33554432);
 		 props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		 props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-		 Producer<String, String> producer = new org.apache.kafka.clients.producer.KafkaProducer<>(props);
-		 String data = fileReader.readFileAsString("C:\\Users\\tchowdhury\\Documents\\workspace_microservices\\Kafka-Microservices-Application\\src\\main\\resources\\employees.xml");
-	     producer.send(new ProducerRecord<String, String>("inputData", data));
-	     producer.close();
+		 return props;
 	}
+	
+	/*
+	 * filePath is present here, for testing purposes
+	 */
+	public void sendMessageFromFile() throws Exception{
+
+		 producer = new org.apache.kafka.clients.producer.KafkaProducer<>(setDefaultProperties());
+		 
+		 String filePath = "C:\\Users\\tchowdhury\\Documents\\workspace_microservices\\Kafka-Microservices-Application\\src\\main\\resources\\employees.xml";
+		 
+		 String data = fileReader.readFileAsString(filePath);
+	     
+		 producer.send(new ProducerRecord<String, String>("inputData", data));
+	     
+		 producer.close();
+	}
+	
+	/*
+	 * user enters filePath to xml file via URI. Controller then uses this method
+	 */
+	public void sendMessageFromURI(String topicName, String data) throws Exception{
+		
+		producer = new org.apache.kafka.clients.producer.KafkaProducer<>(setDefaultProperties());
+		
+		ProducerRecord<String, String> record = new ProducerRecord<String, String>(topicName, data);
+		
+		producer.send(record);
+	     
+		producer.close();
+	}
+	
+	
 }
